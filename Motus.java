@@ -30,17 +30,26 @@ public class Motus extends Dico{
 	}
 	
 	protected void jouerMot (String mot){
-		int i;
+		int i,j;
 		try {
 			if(this.motDansDico(mot)==true) {
 				if(mot.length()==8) {
 			List <String> mot_=this.motDansTableau(mot);
 			for(i=0;i<mot_.size();i++) {
+				for(j=0;j<mot_.size();j++) {
 				if(this.motATrouver.get(i).equals(mot_.get(i))) {
 					this.trouvee.set(i, true);
 					this.affichage.set(i, mot_.get(i));
 					
 				}
+				else {
+				if(this.motATrouver.get(j).equals(mot_.get(i))) {
+					int pos = i+1;
+					System.out.println("La lettre : "+this.motATrouver.get(j)+" en position "+pos+" n'est pas a la bonne place !");
+				}
+				}
+				}
+			
 				
 			}
 			}
@@ -55,6 +64,7 @@ public class Motus extends Dico{
 				this.nbCpRestant--;
 				System.out.println("NOMBRE DE COUPS RESTANTS: "+this.nbCpRestant);
 			}
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -81,7 +91,7 @@ public class Motus extends Dico{
 			this.affichage.add("_ ");
 			this.nbCpRestant=8;
 		}
-		System.out.println("Bienvenue au jeu du pendu");
+		System.out.println("JOUONS AU MOTUS ! ");
 	}
 	
 	public void jouer() {
@@ -98,6 +108,7 @@ public class Motus extends Dico{
 			trouve = this.motTrouve();
 			this.afficherListe(affichage);
 			this.nbCpRestant--;
+			System.out.println("NOMBRE DE COUPS RESTANTS : "+this.nbCpRestant);
 		}
 		if(this.motTrouve()==true) {
 			System.out.println("GAGNE");
@@ -109,4 +120,3 @@ public class Motus extends Dico{
 	}
 	
 }
-
