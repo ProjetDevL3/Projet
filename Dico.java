@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-public class Dico extends Classement{
+public class Dico {
 	private BufferedReader br;
 
 	public boolean motDansDico(String mot) throws IOException {
