@@ -1,13 +1,13 @@
-package algo.dev.project;
+package com.projet.algodev.l3;
 
-
+import com.projet.algodev.l3.inter.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 
-public class Motus extends Dico{
+public class Motus extends Dico implements jeuMot{
 	
 	protected int nbCpRestant=8;
 	protected String motATrouver_ = this.motAleatoireHuitLettres();
@@ -18,7 +18,7 @@ public class Motus extends Dico{
 
 	
 	
-	protected boolean motTrouve() {
+	public boolean motTrouve() {
 		int i;
 		boolean test=true;
 		for(i=0;i<this.motATrouver.size();i++) {
@@ -29,12 +29,12 @@ public class Motus extends Dico{
 		return test;
 	}
 	
-	protected void jouerMot (String mot){
+	public void jouerCoup (String coup){
 		int i,j;
 		try {
-			if(this.motDansDico(mot)==true) {
-				if(mot.length()==8) {
-			List <String> mot_=this.motDansTableau(mot);
+			if(this.motDansDico(coup)==true) {
+				if(coup.length()==8) {
+			List <String> mot_=this.motDansTableau(coup);
 			for(i=0;i<mot_.size();i++) {
 				for(j=0;j<mot_.size();j++) {
 				if(this.motATrouver.get(i).equals(mot_.get(i))) {
@@ -54,13 +54,13 @@ public class Motus extends Dico{
 			}
 			}
 				else {
-					System.out.println("ATTENTION, LE MOT "+mot+" NE FAIT PAS 8 LETTRES");
+					System.out.println("ATTENTION, LE MOT "+coup+" NE FAIT PAS 8 LETTRES");
 					this.nbCpRestant--;
 					System.out.println("NOMBRE DE COUPS RESTANTS: "+this.nbCpRestant);
 				}
 			}
 			else {
-				System.out.println("ATTENTION, LE MOT "+mot+" N'EXISTE PAS !");
+				System.out.println("ATTENTION, LE MOT "+coup+" N'EXISTE PAS !");
 				this.nbCpRestant--;
 				System.out.println("NOMBRE DE COUPS RESTANTS: "+this.nbCpRestant);
 			}
@@ -73,7 +73,7 @@ public class Motus extends Dico{
 		
 		}
 	
-	protected void afficherListe(List<String> l) {
+	public void afficherListe(List<String> l) {
 		int x=l.size();
 		int i;
 		for(i=0;i<x;i++) {
@@ -83,7 +83,7 @@ public class Motus extends Dico{
 		System.out.println();
 	}
 	
-	protected void initialisation() {
+	public void initialisation() {
 		int nbL=motATrouver.size();
 		int i;
 		for(i=0;i<nbL;i++) {
@@ -104,7 +104,7 @@ public class Motus extends Dico{
 			System.out.println("Veuillez saisir un mot :");
 			String motRentre_ = sc.nextLine();
 			String motRentre = motRentre_.toUpperCase();
-			this.jouerMot(motRentre);
+			this.jouerCoup(motRentre);
 			trouve = this.motTrouve();
 			this.afficherListe(affichage);
 			this.nbCpRestant--;
