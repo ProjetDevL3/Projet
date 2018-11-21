@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Motus extends Dico implements jeuMot{
+public class Motus extends Dico implements JeuMot{
 	
 	protected int nbCpRestant=8;
 	protected String motATrouver_ = this.motAleatoireHuitLettres();
