@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 public class Classement {
 	//Classement pendu
 		protected int nbVictPendu;
@@ -134,14 +137,17 @@ public class Classement {
 		public void afficherCLassement() {
 			this.recupererClassement();
 			this.envoyerClassementFichier();
-			System.out.println("Vous avez gagné "+this.nbVictPendu +" fois au pendu");
-			System.out.println("Vous avez perdu "+this.nbDefPendu +" fois au pendu");
-			System.out.println("Vous avez gagné "+this.nbVictMotus +" fois au Motus");
-			System.out.println("Vous avez perdu "+this.nbDefMotus +" fois au Motus");
-			System.out.println("Vous avez gagné "+this.nbVictMotsM +" fois au Mots Mélés");
-			System.out.println("Vous avez fait "+this.nbErrMotsM +" erreurs au Mots Mélés");
-			System.out.println("Vous avez fait "+this.nbGrillesC +" grilles de sudoku");
-			System.out.println("Vous avez fait "+this.nbGrillesCL +" grilles de sudoku lettres");
+			JOptionPane jop;
+			jop = new JOptionPane();
+			ImageIcon img = new ImageIcon("nagui.jpg");
+			jop.showMessageDialog(null, "Vous avez gagné "+this.nbVictPendu +" fois au pendu\n"+
+					"Vous avez perdu "+this.nbDefPendu +" fois au pendu\n"+
+					"Vous avez gagné "+this.nbVictMotus +" fois au Motus\n"+
+					"Vous avez perdu "+this.nbDefMotus +" fois au Motus\n"+
+					"Vous avez gagné "+this.nbVictMotsM +" fois au Mots Mélés\n"+
+					"Vous avez fait "+this.nbErrMotsM +" erreurs au Mots Mélés\n"+
+					"Vous avez fait "+this.nbGrillesC +" grilles de sudoku\n"+
+					"Vous avez fait "+this.nbGrillesCL +" grilles de sudoku lettres\n", "Classement", JOptionPane.INFORMATION_MESSAGE,img);
 		}
 	
 	
