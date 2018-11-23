@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Motus extends Dico implements JeuMot{
+public class Motus extends Dico implements jeuMot{
 	
 	protected int nbCpRestant=8;
 	protected String motATrouver_ = this.motAleatoireHuitLettres();
@@ -34,21 +34,26 @@ public class Motus extends Dico implements JeuMot{
 		try {
 			if(this.motDansDico(coup)==true) {
 				if(coup.length()==8) {
-			List <String> mot_=this.motDansTableau(coup);
-			for(i=0;i<mot_.size();i++) {
-				for(j=0;j<mot_.size();j++) {
-				if(this.motATrouver.get(i).equals(mot_.get(i))) {
-					this.trouvee.set(i, true);
-					this.affichage.set(i, mot_.get(i));
+					List <String> mot_=this.motDansTableau(coup);
+					for(i=0;i<mot_.size();i++) {
+						Boolean res = false;
+						for(j=0;j<mot_.size();j++) {
+							if(this.motATrouver.get(i).equals(mot_.get(i))) {
+								this.trouvee.set(i, true);
+								this.affichage.set(i, mot_.get(i));
 					
-				}
-				else {
-				if(this.motATrouver.get(j).equals(mot_.get(i))) {
-					int pos = i+1;
-					System.out.println("La lettre : "+this.motATrouver.get(j)+" en position "+pos+" n'est pas a la bonne place !");
-				}
-				}
-				}
+							}
+							else {
+								if(this.motATrouver.get(j).equals(mot_.get(i))) {
+									res = true;
+								}
+				
+							}
+						}
+						if(res==true) {
+							int pos = i+1;
+							System.out.println("La lettre : "+mot_.get(i)+" en position "+pos+" n'est pas a la bonne place !");
+						}
 			
 				
 			}
