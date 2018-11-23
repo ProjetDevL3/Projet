@@ -1,17 +1,18 @@
 package algo.dev.project;
 
 import java.util.Scanner;
+import algo.dev.interf.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pendu extends Dico {
+public class Pendu extends Dico implements JeuMot{
 
 		protected List<String> motList= this.motDansTableau(this.motAleatoire());
 		protected List<Boolean> trouvee= new ArrayList<Boolean>();
 		protected List<String> affichage= new ArrayList<String>();
 		protected int nbCpRestant=5;
 		
-		protected void afficherListe(List<String> l) {
+		public void afficherListe(List<String> l) {
 			int x=l.size();
 			int i;
 			for(i=0;i<x;i++) {
@@ -21,7 +22,7 @@ public class Pendu extends Dico {
 			System.out.println();
 		}
 		
-		protected void initialisation() {
+		public void initialisation() {
 			int nbL=motList.size();
 			int i;
 			for(i=0;i<nbL;i++) {
@@ -31,7 +32,7 @@ public class Pendu extends Dico {
 			System.out.println("Bienvenue au jeu du pendu");
 		}
 		
-		protected boolean motTrouve() {
+		public boolean motTrouve() {
 			int i;
 			boolean test=true;
 			for(i=0;i<this.motList.size();i++) {
@@ -42,10 +43,10 @@ public class Pendu extends Dico {
 			return test;
 		}
 		
-		protected void jouerLettre(String lettre_){
+		public void jouerCoup(String coup){
 		int i;
 		int cpt=0;
-		String lettre = lettre_.toUpperCase();
+		String lettre = coup.toUpperCase();
 		for(i=0;i<this.motList.size();i++) {
 			if(this.motList.get(i).equals(lettre)) {
 				this.trouvee.set(i, true);
@@ -63,7 +64,7 @@ public class Pendu extends Dico {
 		}
 
 
-		protected void jouer() {
+		public void jouer() {
 		System.out.println("( mot a trouver ) : "+this.motList);
 		this.initialisation();
 		Scanner hj=new Scanner(System.in);
@@ -71,7 +72,7 @@ public class Pendu extends Dico {
 		while(this.nbCpRestant>0 && this.motTrouve()==false) {
 			System.out.println("Entrer une Lettre: ");
 			String lettre = hj.next();
-			this.jouerLettre(lettre);
+			this.jouerCoup(lettre);
 			this.motTrouve();
 			this.afficherListe(affichage);
 			
