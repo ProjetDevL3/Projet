@@ -1,0 +1,12 @@
+
+public class JeuSudoku {
+	public Sudoku sudoku;
+	public int nbPoints;
+	
+	public JeuSudoku(int nbPoints)
+	{
+		this.nbPoints = nbPoints;
+		this.sudoku = new Sudoku(nbPoints);
+		//System.out.println(sudoku.getNbPoints());
+	}
+}
