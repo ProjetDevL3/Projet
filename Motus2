@@ -1,0 +1,140 @@
+import java.util.Random;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
+public class Motus2 {
+	
+    int taille = 8;
+    int nbSolution = 1;
+    int nbMotrentrer = 0;
+	int T[][] = new int[taille][taille];
+	char Mot[] = new char[taille];
+	char Solution[][] = new char [nbSolution][taille];
+	char Grille[][] = new char[taille][taille];
+	
+	void init(Dico_Mele D) {
+		this.CreerSolution(D);
+		this.CreationGrille();
+		InterfaceMotus M = new InterfaceMotus(this);
+	}
+	
+	
+	void afficherSolution() {
+		int i;
+		int j;
+		for(i = 0; i < this.nbSolution; i++) {
+			for(j = 0; j < this.taille; j++) {
+				System.out.print(this.Solution[i][j]);
+			}
+			System.out.println();
+			}
+		}
+	
+	void afficherGrille() {
+		int i;
+		int j;
+		for(i = 0; i < this.taille; i++) {
+			for(j = 0; j < this.taille; j++) {
+				System.out.print(this.Grille[i][j]);
+			}
+			System.out.println();
+			}
+		}
+	
+	
+	char[] Mot(Dico_Mele D) {
+		char [] Mot = D.motDansTableau(D.motAleatoireHuitLettres());
+		return Mot;
+	}
+	
+	
+	void CreerSolution(Dico_Mele D) {
+		int i;
+		int j;
+		int taillemot;
+		for (i = 0; i<nbSolution;i++) {
+			this.Mot = this.Mot(D);
+			taillemot = this.Mot.length;
+			for(j=0 ; j< taillemot; j++) {
+				this.Solution[i][j] = this.Mot[j];
+				this.T[i][j]= this.Mot[j];
+			}
+		}
+	}
+	
+	// Permet la creation de la Grille de Jeux 
+	void CreationGrille(char[] choix) {
+		int j;
+		for(j = 0; j<this.taille;j++) {
+			this.Grille[this.nbMotrentrer][j] = choix[j];
+		}
+	}
+	void CreationGrille() {
+		int i;
+		int j;
+		for(i=0; i<this.taille;i++) {
+			for(j = 0; j<this.taille;j++) {
+				this.Grille[i][j]= '\u0000';
+			}
+		}
+	}
+	
+	/* Compare si le mot renter par l'utilisateur se trouver 
+	dans la grille solution*/
+	boolean compare(int i) {
+		boolean v = true;
+		int j;
+		for(j = 0; j< this.taille;j++) {
+			if (v == true) {
+				if(T[i][j] != 3) {
+					v = false;
+				}
+			}
+		}
+		return v;
+	}
+	
+
+	void couleur(char[] mot,int i) {
+		int k ;
+		int j ;
+		for(k = 0; k < 8;k++) {
+			for(j = 0; j< 8; j++) {
+				if(T[i][k] != 3 ) {
+					if(mot[k] == this.Solution[0][j]) {
+						if(k == j) {
+							this.T[i][k] = 3 ;
+						}
+						else{
+							this.T[i][k] = 2;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	// Calcule la taille d'un mot
+	
+	void jouer(Dico_Mele D) {
+		this.init(D);  // Initialisation du jeux
+		this.afficherSolution();
+		boolean verif = false;
+		while(this.nbMotrentrer < this.taille && verif == false ){
+			System.out.println("Veuillez saisir un mot :");
+			String motRentre_=(String) JOptionPane.showInputDialog(null,"Jouer un mot\n"+String.join(""),"Le jeu du Mots Meles!", JOptionPane.QUESTION_MESSAGE);
+			String motRentre = motRentre_.toUpperCase();
+			char[] Motrentre = motRentre.toCharArray();
+			this.couleur(Motrentre, this.nbMotrentrer);
+			this.CreationGrille(Motrentre);
+			InterfaceMotus M = new InterfaceMotus(this);
+			verif = this.compare(nbMotrentrer);
+			if(verif == true) {
+				System.out.println("bien jouer");
+			}
+			this.nbMotrentrer++;
+		}
+	}
+	
+}
