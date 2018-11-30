@@ -1,7 +1,13 @@
+package algo.dev.project;
+
+
+import java.io.BufferedReader;
+import java.util.Random;
+
 import java.util.Random;
 import java.util.Scanner;
 
-public class Mots_Mele {
+public class MotsMele extends Dico {
 	
     int taille = 10;
     int nbSolution = 5;
@@ -10,8 +16,8 @@ public class Mots_Mele {
 	char Solution[][] = new char [nbSolution][taille];
 	char Grille[][] = new char[taille][taille];
 	
-	void init(Dico D) {
-		this.CreerSolution(D);
+	void init() {
+		this.CreerSolution();
 		this.CreationGrille();
 		this.afficherGrille();
 	}
@@ -46,18 +52,18 @@ public class Mots_Mele {
 		return c;
 	}
 	
-	char[] Mot(Dico D) {
-		char [] Mot = D.motDansTableau(D.motAleatoiretaille(this.taille));
+	char[] Mot() {
+		char [] Mot = this.motDansTableau2(this.motAleatoiretaille(this.taille));
 		return Mot;
 	}
 	
 	
-	void CreerSolution(Dico D) {
+	void CreerSolution() {
 		int i;
 		int j;
 		int taillemot;
 		for (i = 0; i<nbSolution;i++) {
-			this.Mot = this.Mot(D);
+			this.Mot = this.Mot();
 			taillemot = this.Mot.length;
 			for(j=0 ; j< taillemot; j++) {
 				this.Solution[i][j] = this.Mot[j];
@@ -133,8 +139,8 @@ public class Mots_Mele {
 		return comp;
 	}
 	
-	void jouer(Dico D) {
-		this.init(D);
+	void jouer() {
+		this.init();
 		Scanner sc = new Scanner(System.in);
 		boolean verif = false;
 		int nbmottrouver = 0;
