@@ -3,6 +3,7 @@ package algo.dev.project;
 
 
 import javax.swing.ImageIcon;
+
 import javax.swing.JOptionPane;
 
 import algo.dev.interf.*;
@@ -46,7 +47,7 @@ public class Pendu extends Dico implements JeuMot{
 			return test;
 		}
 		
-		public boolean jouerCoup(String coup){
+		public void jouerCoup(String coup){
 		int i;
 		int cpt=0;
 		String lettre = coup.toUpperCase();
@@ -62,9 +63,7 @@ public class Pendu extends Dico implements JeuMot{
 		if(cpt==0) {
 			this.nbCpRestant--;
 			System.out.println("Cette lettre n'appartient pas au mot. Nombre de vie restante: "+this.nbCpRestant);
-			return false;
 		}
-		return true;
 		}
 
 
@@ -81,91 +80,57 @@ public class Pendu extends Dico implements JeuMot{
 		ImageIcon img7 = new ImageIcon("pendu7.png");
 		ImageIcon img8 = new ImageIcon("pendu8.png");
 		ImageIcon img9 = new ImageIcon("pendu9.png");
+		ImageIcon img10 = new ImageIcon("pendu10.png");
 		ImageIcon victoire = new ImageIcon("victoire.gif");
-		this.afficherListe(affichage);
 		while(this.nbCpRestant>0 && this.motTrouve()==false) {
 			if(this.nbCpRestant==10) {
-				String lettre1=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre1=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img10,null,"");
 				this.jouerCoup(lettre1);
-				JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img9);
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==9) {
-				String lettre2=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre2=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img9,null,"");
 				this.jouerCoup(lettre2);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img8);
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==8) {
-				String lettre3=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre3=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img8,null,"");
 				this.jouerCoup(lettre3);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img7);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==7) {
-				String lettre4=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre4=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img7,null,"");
 				this.jouerCoup(lettre4);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img6);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==6) {
-				String lettre5=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre5=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img6,null,"");
 				this.jouerCoup(lettre5);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img5);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==5) {
-				String lettre6=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre6=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img5,null,"");
 				this.jouerCoup(lettre6);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img4);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==4) {
-				String lettre7=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre7=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img4,null,"");
 				this.jouerCoup(lettre7);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img3);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==3) {
-				String lettre8=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre8=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img3,null,"");
 				this.jouerCoup(lettre8);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img2);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==2) {
-				String lettre9=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre9=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img2,null,"");
 				this.jouerCoup(lettre9);
-				
-					JOptionPane.showMessageDialog(null, "","",JOptionPane.INFORMATION_MESSAGE,img1);
-
-				
 				this.motTrouve();
 			}
 			if(this.nbCpRestant==1) {
-				String lettre10=JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE);
+				String lettre10=(String) JOptionPane.showInputDialog(null,"Jouer une lettre\n"+"Nombre de coups restants: "+this.nbCpRestant+"\n"+String.join("", this.affichage),"Le jeu du pendu!", JOptionPane.QUESTION_MESSAGE,img1,null,"");
 				this.jouerCoup(lettre10);
-
-				
 				this.motTrouve();
 			}
 			
@@ -179,7 +144,6 @@ public class Pendu extends Dico implements JeuMot{
 			JOptionPane.showMessageDialog(null,"Défaite, le mot à trouver était: \n"+this.mot,"Défaite", JOptionPane.INFORMATION_MESSAGE,img0);
 			
 		}
-		//hj.close();
 		
 		
 	}
