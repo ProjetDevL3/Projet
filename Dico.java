@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-public class Dico {
+public class Dico{
 	private BufferedReader br;
 
 	public boolean motDansDico(String mot) throws IOException {
@@ -214,4 +214,50 @@ public int nbMotsHuitLettres(int taille) {
 
 	return i;
 }
+public char[] motDansTableau2 (String mot) {
+	char [] motretutn = mot.toCharArray();
+        
+    return motretutn;
+}
+public String motAleatoiretaille2 (int taille) {
+	try{
+	FileReader fr = new FileReader("dico.txt");
+	br = new BufferedReader(fr);
+	List <String> motstaille = cherchetaillelettre(taille);
+	Random rand = new Random(); 
+	int nbmottaille = this.nbMotsTaille(taille);
+	int alea = rand.nextInt(nbmottaille);
+	String resultat = motstaille.get(alea);
+	return resultat;
+}catch(FileNotFoundException e){
+    e.printStackTrace();
+    return null;
+}
+}
+public int nbMotsTaille(int taille) {
+	
+	int i = 0;
+
+	try {
+	
+		 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("dico.txt" )));
+	      String line;
+	      while ((line = br.readLine()) != null) {
+	         if(line.length() <= taille) {
+	        	 i=i+1;
+	         }
+	      }
+	      br.close();
+	}catch(FileNotFoundException e){
+        e.printStackTrace();
+        return i;
+    }catch(IOException e){
+        e.printStackTrace();
+        return i;
+    }
+
+	return i;
+}
+
+
 }
