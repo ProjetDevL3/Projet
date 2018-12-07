@@ -1,0 +1,933 @@
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
+ 
+public class Sudoku extends JFrame {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public int nbErreurs;
+	public int nbPoints = 0;
+
+private ArrayList<Integer> recupInt(int ligne, int colonne,int[][] tab) //Récupère la liste des chiffres déjà présents en ligne, colonne, région (sans doublon)
+{
+	ArrayList<Integer> listInt = new ArrayList<Integer>();
+	for(int i = 0; i < 9; i++) //Ajout tous les chiffres en lignes
+	{
+		if(tab[i][colonne]!=0)
+			listInt.add(tab[i][colonne]);
+	}
+	for(int j = 0; j < 9; j++) //Ajoute tous les chiffres en colonnes
+	{
+		if(tab[ligne][j]!=0)
+			listInt.add(tab[ligne][j]);
+	}
+	int codeRegion=0;
+	if(ligne >= 0 && ligne <= 2) //Recherche de la région
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 1;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 2;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 3;
+	}
+	if(ligne >= 3 && ligne <=5)
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 4;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 5;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 6;
+	}
+	if(ligne >= 6 && ligne <= 8)
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 7;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 8;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 9;
+	}
+	switch(codeRegion) //Ajoute tous les chiffres en région
+	{
+	case 1: //Region 1(haut gauche)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 2: //Region 2(haut centre)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 3: //Region 3(haut droit)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 4: //Region 4(milieu gauche)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 5: //Region 5(milieu centre)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 6: //Region 6(milieu droit)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 7: //Region 7(bas gauche)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 8: //Region 8(bas centre)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	case 9: //Region 8(bas droit)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j]!=0)
+					listInt.add(tab[i][j]);
+			}
+		}
+		break;
+	}
+	Set<Integer> set = new HashSet<Integer>(); //Création de la liste sans doublon
+	set.addAll(listInt); 
+	ArrayList<Integer> distinctList = new ArrayList<Integer>(set);
+	return distinctList;
+}
+
+private ArrayList<Integer> IntPossible(ArrayList<Integer> al) //Renvoie la liste des chiffres jouables en fonction des chiffres joués (récupérés avec la fonction du dessus)
+{
+	ArrayList<Integer> chiffre = new ArrayList<Integer>(); //Tableau des chiffres possibles (entre 1 et 9)
+	ArrayList<Integer> res = new ArrayList<Integer>();
+	chiffre.add(1);
+	chiffre.add(2);
+	chiffre.add(3);
+	chiffre.add(4);
+	chiffre.add(5);
+	chiffre.add(6);
+	chiffre.add(7);
+	chiffre.add(8);
+	chiffre.add(9);
+	for(int i:chiffre) //Récupère les chiffres qui ne sont pas contenus dans le tableau en paramètre afin d'obtenir les coups possibles
+	{
+		if(!al.contains(i))
+				res.add(i);
+	}
+	return res;
+}
+
+private boolean IntnoString(String c) //Vérifie si la valeur rentrée au clavier est bien une des réponses possibles si dessous
+{
+	String s = new String(c);
+	if(s.equals(new String("1")))
+		return true;
+	if(s.equals(new String("2")))
+		return true;
+	if(s.equals(new String("3")))
+		return true;
+	if(s.equals(new String("4")))
+		return true;
+	if(s.equals(new String("5")))
+		return true;
+	if(s.equals(new String("6")))
+		return true;
+	if(s.equals(new String("7")))
+		return true;
+	if(s.equals(new String("8")))
+		return true;
+	if(s.equals(new String("9")))
+		return true;
+	return false;
+}
+
+private boolean verifLigne(int choix, int[][] tab, int ligne, int colonne) //Vérifie si la valeur rentrée au clavier n'est pas déjà présente dans la ligne associée au bouton
+{
+	boolean verifColonne = true;
+	for(int j=0; j<ligne; j++)
+	{
+		if(tab[ligne][j]==choix)
+			verifColonne = false;
+	}
+	for(int j=ligne+1; j<9; j++)
+	{
+		if(tab[ligne][j]==choix)
+			verifColonne = false;
+	}
+	return verifColonne;
+}
+
+private boolean verifColonne(int choix, int[][] tab, int ligne, int colonne) //Vérifie si la valeur rentrée au clavier n'est pas déjà présente dans la colonne associée au bouton
+{
+	boolean verifLigne = true;
+	for(int i=0; i<colonne; i++)
+	{
+		if(tab[i][colonne]==choix)
+			verifLigne = false;
+	}
+	for(int i=colonne+1; i<9; i++)
+	{
+		if(tab[i][colonne]==choix)
+			verifLigne = false;
+	}
+	return verifLigne;
+}
+
+private boolean verifRegion(int choix, int[][] tab, int ligne, int colonne) //Vérifie si la valeur rentrée au clavier n'est pas déjà présente dans la région associée au bouton
+{
+	boolean verifRegion = true;
+	int codeRegion=0;
+	if(ligne >= 0 && ligne <= 2) //Recherche de la région associée au bouton
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 1;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 2;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 3;
+	}
+	if(ligne >= 3 && ligne <=5)
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 4;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 5;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 6;
+	}
+	if(ligne >= 6 && ligne <= 8)
+	{
+		if(colonne >= 0 && colonne <= 2)
+			codeRegion = 7;
+		if(colonne >= 3 && colonne <= 5)
+			codeRegion = 8;
+		if(colonne >= 6 && colonne <= 8)
+			codeRegion = 9;
+	}
+	switch(codeRegion)
+	{
+	case 1: //Region 1 (haut gauche)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 2: //Region 2(haut centre)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 3: //Region 3(haut droit)
+		for(int i = 0; i <= 2; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 4: //Region 4(milieu gauche)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 5: //Region 5(milieu centre)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 6: //Region 6(milieu droit)
+		for(int i = 3; i <= 5; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 7: //Region 7(bas gauche)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 0; j <= 2; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 8: //Region 8(bas centre)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 3; j <= 5; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	case 9: //Region 9(bas droit)
+		for(int i = 6; i <= 8; i++)
+		{
+			for(int j = 6; j <= 8; j++)
+			{
+				if(tab[i][j] == choix)
+					verifRegion = false;
+			}
+		}
+		break;
+	}
+	return verifRegion;
+}
+
+private boolean coupPossible(int choix, int[][] tab, int ligne, int colonne) //Renvoie true si les trois vérifications du dessus sont vérifiées
+{
+	boolean verif = false;
+	if(verifLigne(choix, tab, ligne, colonne) == true && verifColonne(choix, tab, ligne, colonne) == true && verifRegion(choix, tab, ligne, colonne) == true)
+		verif = true;
+	return verif;
+}
+
+public void recommencerPartie() //Ferme la fenêtre du sodoku et relance une nouvelle partie
+{
+	this.dispose();
+	new JeuSudoku(this.nbPoints);
+}
+
+public void partieGagnee(int[][] tab, JFrame grille) //Lorsque la partie est gagnée, cette fonction propose de recommencer une partie, ou tout simplement de quitter le jeu
+{
+	boolean rempli = true;
+	for(int i = 0; i<9; i++) //Vérifie si le tableau est rempli avec des valeurs différentes de zéro (donc des coups validés)
+	{
+		for(int j = 0; j<9; j++)
+		{
+			if(tab[i][j] == 0)
+				rempli = false;
+		}
+	}
+	if(rempli == true) //Laisse le choix à l'utilisateur de recommencer la partie ou non
+	{
+		this.nbPoints = this.nbPoints + 1;
+		JOptionPane.showMessageDialog(grille, "Victoire !\nVous avez remporté la partie !\n Vous avec actuellement " + nbPoints + "points.", "Victoire !", JOptionPane.INFORMATION_MESSAGE);
+		String[] renouveau = { "Oui ", " Non" };
+		int relance = JOptionPane.showOptionDialog(grille,
+				"Voulez-vous retenter votre chance ?",
+				"Relancer !",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+	    		JOptionPane.QUESTION_MESSAGE,
+				null,
+				renouveau,
+				renouveau[1]);
+		if(relance == 0)
+		{
+			this.dispose();
+			new JeuSudoku(this.nbPoints);
+		}
+		else
+		{
+			this.dispose();
+			System.out.println(this.nbPoints);
+		}
+		
+	}
+}
+
+public int getNbPoints() //Renvoie le nombre de points obtenus lors de toutes les parties
+{
+	return this.nbPoints;
+}
+	
+private int[][] getGrille(int choix) //Renvoie un tableau contenant les valeurs du sodoku en fonction du choix de l'utilisateur
+{
+	int[][] tab = new int[9][9];
+	switch(choix) {
+	//Grille level facile
+	case 1:
+		tab[0][3] = 4;
+		tab[0][6] = 8;
+		tab[0][7] = 7;
+		tab[1][1] = 4;
+		tab[1][2] = 7;
+		tab[1][4] = 9;
+		tab[1][5] = 2;
+		tab[1][7] = 5;
+		tab[2][0] = 2;
+		tab[2][3] = 6;
+		tab[2][7] = 3;
+		tab[3][0] = 9;
+		tab[3][1] = 7;
+		tab[3][3] = 5;
+		tab[3][6] = 2;
+		tab[3][8] = 3;
+		tab[4][0] = 5;
+		tab[4][2] = 8;
+		tab[4][4] = 2;
+		tab[4][5] = 4;
+		tab[4][6] = 7;
+		tab[4][8] = 6;
+		tab[5][0] = 6;
+		tab[5][2] = 4;
+		tab[5][5] = 7;
+		tab[5][7] = 8;
+		tab[5][8] = 5;
+		tab[6][1] = 9;
+		tab[6][3] = 3;
+		tab[6][5] = 8;
+		tab[6][8] = 7;
+		tab[7][2] = 3;
+		tab[7][3] = 2;
+		tab[7][4] = 4;
+		tab[7][6] = 1;
+		tab[7][7] = 6;
+		tab[8][1] = 1;
+		tab[8][2] = 2;
+		tab[8][7] = 9;
+		nbErreurs = 6;
+		break;
+	case 2:
+		tab[0][1] = 5;
+		tab[0][4] = 2;
+		tab[0][6] = 9;
+		tab[1][3] = 9;
+		tab[1][7] = 1;
+		tab[1][8] = 5;
+		tab[2][1] = 9;
+		tab[2][3] = 5;
+		tab[2][4] = 1;
+		tab[2][5] = 4;
+		tab[2][7] = 3;
+		tab[3][1] = 7;
+		tab[3][4] = 5;
+		tab[3][5] = 6;
+		tab[3][6] = 1;
+		tab[4][1] = 4;
+		tab[4][2] = 5;
+		tab[4][6] = 2;
+		tab[4][7] = 9;
+		tab[5][2] = 3;
+		tab[5][3] = 2;
+		tab[5][4] = 4;
+		tab[5][7] = 8;
+		tab[6][1] = 3;
+		tab[6][3] = 1;
+		tab[6][4] = 8;
+		tab[6][5] = 7;
+		tab[6][7] = 2;
+		tab[7][0] = 4;
+		tab[7][1] = 8;
+		tab[7][5] = 2;
+		tab[8][2] = 2;
+		tab[8][4] = 3;
+		tab[8][7] = 7;
+		nbErreurs = 6;
+		break;
+	case 3:
+		tab[0][0] = 8;
+		tab[0][1] = 3;
+		tab[0][4] = 4;
+		tab[0][7] = 9;
+		tab[0][8] = 2;
+		tab[1][0] = 1;
+		tab[1][3] = 2;
+		tab[1][5] = 3;
+		tab[1][6] = 7;
+		tab[2][4] = 9;
+		tab[2][5] = 7;
+		tab[2][6] = 4;
+		tab[2][7] = 1;
+		tab[2][8] = 3;
+		tab[3][3] = 3;
+		tab[3][4] = 7;
+		tab[3][5] = 8;
+		tab[3][7] = 2;
+		tab[4][0] = 3;
+		tab[4][3] = 4;
+		tab[4][5] = 9;
+		tab[4][8] = 1;
+		tab[5][1] = 7;
+		tab[5][3] = 1;
+		tab[5][4] = 6;
+		tab[5][5] = 5;
+		tab[6][0] = 2;
+		tab[6][1] = 4;
+		tab[6][2] = 3;
+		tab[6][3] = 9;
+		tab[6][4] = 8;
+		tab[7][2] = 9;
+		tab[7][3] = 5;
+		tab[7][5] = 2;
+		tab[7][8] = 6;
+		tab[8][0] = 6;
+		tab[8][1] = 8;
+		tab[8][4] = 1;
+		tab[8][7] = 3;
+		tab[8][8] = 9;
+		nbErreurs = 6;
+		break;
+	//Grille level moyen
+	case 4:
+		tab[0][2] = 8;
+		tab[0][4] = 5;
+		tab[0][5] = 9;
+		tab[0][6] = 7;
+		tab[0][7] = 2;
+		tab[0][8] = 3;
+		tab[1][0] = 2;
+		tab[1][2] = 6;
+		tab[1][3] = 3;
+		tab[1][4] = 1;
+		tab[1][7] = 5;
+		tab[3][4] = 2;
+		tab[3][5] = 5;
+		tab[3][6] = 9;
+		tab[3][7] = 3;
+		tab[4][0] = 4;
+		tab[4][8] = 7;
+		tab[5][1] = 2;
+		tab[5][2] = 3;
+		tab[5][3] = 7;
+		tab[5][4] = 8;
+		tab[7][1] = 3;
+		tab[7][4] = 9;
+		tab[7][5] = 4;
+		tab[7][6] = 6;
+		tab[7][8] = 8;
+		tab[8][0] = 8;
+		tab[8][1] = 1;
+		tab[8][2] = 4;
+		tab[8][3] = 2;
+		tab[8][4] = 6;
+		tab[8][6] = 5;
+		nbErreurs = 4;
+		break;
+	case 5:
+		tab[0][1] = 3;
+		tab[0][3] = 9;
+		tab[0][6] = 5;
+		tab[1][3] = 8;
+		tab[1][5] = 5;
+		tab[1][6] = 7;
+		tab[1][7] = 3;
+		tab[1][8] = 1;
+		tab[2][2] = 5;
+		tab[2][3] = 3;
+		tab[2][8] = 6;
+		tab[3][4] = 8;
+		tab[3][5] = 9;
+		tab[3][6] = 6;
+		tab[3][8] = 4;
+		tab[4][0] = 6;
+		tab[4][3] = 7;
+		tab[4][5] = 4;
+		tab[4][8] = 3;
+		tab[5][0] = 9;
+		tab[5][2] = 4;
+		tab[5][3] = 2;
+		tab[5][4] = 6;
+		tab[6][0] = 8;
+		tab[6][5] = 2;
+		tab[6][6] = 3;
+		tab[7][0] = 4;
+		tab[7][1] = 1;
+		tab[7][2] = 2;
+		tab[7][3] = 5;
+		tab[7][5] = 7;
+		tab[8][2] = 7;
+		tab[8][5] = 8;
+		tab[8][7] = 2;
+		nbErreurs = 4;
+		break;
+	case 6:
+		tab[0][0] = 7;
+		tab[0][4] = 1;
+		tab[0][5] = 9;
+		tab[0][6] = 6;
+		tab[1][1] = 6;
+		tab[1][4] = 8;
+		tab[1][7] = 9;
+		tab[2][0] = 3;
+		tab[2][4] = 5;
+		tab[2][5] = 6;
+		tab[2][7] = 2;
+		tab[2][8] = 1;
+		tab[3][1] = 2;
+		tab[3][4] = 4;
+		tab[3][6] = 7;
+		tab[3][7] = 3;
+		tab[3][8] = 8;
+		tab[4][1] = 1;
+		tab[4][7] = 5;
+		tab[5][0] = 8;
+		tab[5][1] = 7;
+		tab[5][2] = 9;
+		tab[5][4] = 2;
+		tab[5][7] = 1;
+		tab[6][0] = 9;
+		tab[6][1] = 5;
+		tab[6][3] = 8;
+		tab[6][4] = 3;
+		tab[6][8] = 4;
+		tab[7][1] = 4;
+		tab[7][4] = 9;
+		tab[7][7] = 8;
+		tab[8][2] = 8;
+		tab[8][3] = 1;
+		tab[8][4] = 6;
+		tab[8][8] = 5;
+		nbErreurs = 4;
+		break;
+	//Grille level difficile
+	case 7:
+		tab[0][3] = 4;
+		tab[0][5] = 6;
+		tab[0][8] = 8;
+		tab[1][0] = 8;
+		tab[1][1] = 5;
+		tab[1][2] = 6;
+		tab[1][7] = 3;
+		tab[1][8] = 4;
+		tab[2][1] = 4;
+		tab[2][3] = 7;
+		tab[2][4] = 8;
+		tab[3][1] = 6;
+		tab[3][6] = 5;
+		tab[3][7] = 9;
+		tab[4][2] = 4;
+		tab[4][6] = 2;
+		tab[5][1] = 8;
+		tab[5][2] = 2;
+		tab[5][7] = 1;
+		tab[6][4] = 2;
+		tab[6][5] = 9;
+		tab[6][7] = 4;
+		tab[7][0] = 9;
+		tab[7][1] = 2;
+		tab[7][6] = 8;
+		tab[7][7] = 7;
+		tab[7][8] = 5;
+		tab[8][0] = 4;
+		tab[8][3] = 1;
+		tab[8][5] = 7;
+		nbErreurs = 2;
+		break;
+	case 8:
+		tab[0][0] = 2;
+		tab[0][2] = 5;
+		tab[0][5] = 1;
+		tab[0][8] = 6;
+		tab[1][0] = 8;
+		tab[1][2] = 7;
+		tab[1][6] = 9;
+		tab[1][7] = 1;
+		tab[2][3] = 6;
+		tab[2][4] = 4;
+		tab[3][1] = 2;
+		tab[3][3] = 1;
+		tab[3][6] = 3;
+		tab[3][8] = 8;
+		tab[5][0] = 1;
+		tab[5][2] = 9;
+		tab[5][5] = 6;
+		tab[5][7] = 5;
+		tab[6][4] = 7;
+		tab[6][5] = 2;
+		tab[7][1] = 3;
+		tab[7][2] = 2;
+		tab[7][6] = 6;
+		tab[7][8] = 9;
+		tab[8][0] = 5;
+		tab[8][3] = 8;
+		tab[8][6] = 2;
+		tab[8][8] = 1;
+		nbErreurs = 2;
+		break;
+	//Grille level diabolique
+	case 9:
+		tab[0][1] = 3;
+		tab[0][3] = 2;
+		tab[0][7] = 4;
+		tab[1][1] = 7;
+		tab[1][2] = 6;
+		tab[1][5] = 9;
+		tab[2][0] = 4;
+		tab[2][1] = 5;
+		tab[2][5] = 3;
+		tab[2][6] = 2;
+		tab[3][4] = 2;
+		tab[3][8] = 1;
+		tab[4][0] = 8;
+		tab[4][2] = 7;
+		tab[4][6] = 3;
+		tab[4][8] = 4;
+		tab[5][0] = 9;
+		tab[5][4] = 4;
+		tab[6][2] = 2;
+		tab[6][3] = 5;
+		tab[6][7] = 3;
+		tab[6][8] = 9;
+		tab[7][3] = 1;
+		tab[7][6] = 5;
+		tab[7][7] = 6;
+		tab[8][1] = 9;
+		tab[8][5] = 7;
+		tab[8][7] = 1;
+		nbErreurs = 1;
+		break;
+	}
+	return tab;
+}
+
+public Sudoku(int nbPoints){
+	this.nbPoints = nbPoints; 
+    this.setTitle("Grille sudoku"); //Crée la fenêtre de jeu
+    this.setSize(600,700);
+    this.setLocationRelativeTo(null);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setResizable(false);
+    this.setContentPane(new Graphique()); //Composant qui permet de tracer les lignes pour délimiter les régions (pour plus de lisibilité)
+    this.setAlwaysOnTop(true);
+    JFrame test = this;
+    GridLayout gl = new GridLayout(9,9);
+    gl.setHgap(1);
+    gl.setVgap(1);
+    setLayout(gl);
+    ImageIcon img = new ImageIcon("imageSudoku.png");
+    String[] choixGrille = {" Facile - 1", " Facile - 2 ", " Facile - 3 ", " Moyen - 4 ", " Moyen - 5 ", " Moyen - 6 ", " Difficile - 7 ", " Difficile - 8 ", " Diabolique - 9 ", " Quitter - 0 "};
+    int choix = JOptionPane.showOptionDialog(null,
+    		"Le jeu Sudoku est proposé avec 9 grilles.\nChoisissez la votre !",
+    		"Choix de grille",
+    		JOptionPane.YES_NO_CANCEL_OPTION,
+    		JOptionPane.QUESTION_MESSAGE,
+    		img,
+    		choixGrille,
+    		choixGrille[9]); //Fenêtre d'option laissant à l'utilisateur le choix de la grille qu'il veut utiliser
+    if(choix != 9)
+    {
+    	final int[][] tab = getGrille(choix+1);
+        JOptionPane.showMessageDialog(null, "Vous aurez " + nbErreurs + " vie(s) pour cette partie !", "Vies", JOptionPane.INFORMATION_MESSAGE);
+        for(int i=0; i<9; i++) //Création de la grille de bouton
+        {
+        	final int ligne = i;
+        	for(int j=0; j<9; j++)
+        	{
+        		int r = tab[i][j];
+        		final int colonne = j;
+        		String c;
+        		if(r==0) //Si la valeur du tableau vaut zéro, c'est que la case n'a pas été joué, et donc doit être vide dans la grille
+        		{
+        			c ="";
+        			JToggleButton bouton = new JToggleButton(c);
+        			bouton.addItemListener(new ItemListener(){
+                        
+                        public void itemStateChanged(ItemEvent itemEvent){
+                           
+                          if(itemEvent.getStateChange() == ItemEvent.SELECTED){ 
+                               
+                              //Change le texte du bouton
+                              Thread t = new Thread(new Runnable(){
+                                public void run() {
+                                    Thread st = new Thread(new Runnable(){
+                                        public void run() {
+                                            if(IntPossible(recupInt(ligne, colonne, tab)).isEmpty())
+                                            {
+                                            	//Message d'erreur qui apparait lorsque la grille des possibilités est vide. Laissant le choix à l'utilisateur de recommencer la partie s'il le souhaite
+                                            	//Ou simplement de continuer la partie s'il trouve ses erreurs.
+                                            	JOptionPane.showMessageDialog(test, "Erreur. Liste des coups vide !", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                            	JOptionPane.showMessageDialog(test, "Vous devez vérifier les autres valeurs du Sudoku afin de continuer.", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                            	String[] relance = {" Oui ! "," Non ! "};
+                                            	int choixRelance = JOptionPane.showOptionDialog(test,
+                                                		"Voulez recommencer la partie ?\nAttention, cela annulera la partie en cours.",
+                                                		"Choix de relance",
+                                                		JOptionPane.YES_NO_CANCEL_OPTION,
+                                                		JOptionPane.QUESTION_MESSAGE,
+                                                		null,
+                                                		relance,
+                                                		relance[1]);
+                                            	if(choixRelance == 0)
+                                            	{
+                                            		recommencerPartie();
+                                            	}
+                                            }
+                                            else
+                                            {
+                                            	//Fenêtre qui récupère la valeur que l'utilisateur souhaite jouer
+                                            	String entier = JOptionPane.showInputDialog(test, "Jouez votre coup !", "Coup", JOptionPane.QUESTION_MESSAGE);
+                                            	//Si la valeur rentrée au clavier n'est pas comprise la liste des coups jouables (chiffres entre 1 et 9), cela renvoie un message d'erreur, et le coup est annulé
+                                            	if(IntnoString(entier)==false)
+                                            		JOptionPane.showMessageDialog(test, "Erreur. Entrez une valeur correcte.", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                            	else
+                                            	{
+                                            		int v = Integer.parseInt(entier);
+                                                	boolean coup = coupPossible(v, tab, ligne, colonne); //Vérifie si le coup est jouable en fonction de la ligne, colonne et région
+                                                    tab[ligne][colonne] = v;
+                                                    if(coup == true) //Si le coup est jouable, alors le texte s'affiche dans le bouton
+                                                    {
+                                                    	bouton.setText(entier);
+                                                    	partieGagnee(tab, test);
+                                                    }                                        	
+                                                    else //Sinon, message d'erreur indiquant que le coup joué est éroné. Le coup est donc aussi annulé
+                                                    {
+                                                    	nbErreurs--;
+                                                    	JOptionPane.showMessageDialog(test, new String("Erreur. Impossible de jouer le coup.\nVous ne disposez plus que de " + nbErreurs + " vie(s) !"), "Erreur", JOptionPane.INFORMATION_MESSAGE);
+                                                    	tab[ligne][colonne] = 0;
+                                                    	
+                                                    	if(nbErreurs == 0) //Vérifie si l'utilisateur n'a pas fait trop d'erreur, sinon la partie recommencera
+                                                    	{
+                                                    		JOptionPane.showMessageDialog(test, "Vous avez perdu !\nLa partie va alors recommencer.", "Perdu", JOptionPane.INFORMATION_MESSAGE);
+                                                    		recommencerPartie();
+                                                    	}
+                                                    	else //S'il n'a pas fait trop d'erreurs, il a le choix d'obtenir de l'aide ou non. Affiche les solutions possibles si l'utilisateur le souhaite
+                                                    	{	//Il n'y a pas d'aide pour la grille diabolique.
+                                                    		if(nbErreurs == 1 && choix != 9)
+                                                    		{
+                                                    			String[] choixAide = {" Oui ", " Non "};
+                                                        		int aide = JOptionPane.showOptionDialog(test,
+                                                        	    		"Attention, il ne vous reste plus qu'une chance avant le game over.\nVoulez-vous de l'aide pour les solutions possibles de cette case ?",
+                                                        	    		"Aide",
+                                                        	    		JOptionPane.YES_NO_CANCEL_OPTION,
+                                                        	    		JOptionPane.QUESTION_MESSAGE,
+                                                        	    		null,
+                                                        	    		choixAide,
+                                                        	    		choixGrille[1]);
+                                                        		if(aide == 0)
+                                                        		{                                                			
+                                                        			JOptionPane.showMessageDialog(test, new String("Voici les entiers possibles pour cette case du sudoku :" + IntPossible(recupInt(ligne, colonne, tab))), "Entier possible", JOptionPane.INFORMATION_MESSAGE);
+                                                        		}
+                                                    		}                                        		
+                                                    	}
+                                                    }
+                                            	}                                              
+                                            }
+                                        }
+                                    });
+             
+                                    if(SwingUtilities.isEventDispatchThread()){
+                                        st.start();
+                                         
+                                        //Attend que le texte soit changé
+                                        while(st.isAlive());
+                                    }
+                                    else{
+                                      SwingUtilities.invokeLater(st);
+                                       
+                                      //Attend que le texte soit changé
+                                      while(!st.isAlive() && st.isAlive());
+                                    }
+                                }
+                              });
+                              t.start();                     
+                               
+                              //Attend le changement de texte du bouton
+                              while(t.isAlive());
+                               
+                              //Traitement
+                              //System.out.println("Jouez votre coup !");
+                              try {
+                                Thread.sleep(0);
+                              }  
+                              catch (InterruptedException ex) {}  
+                              //System.out.println("Coup joué !");
+                               
+                              //Fin du traitement (jamais executé)
+                              bouton.setSelected(false);
+                          }
+                        }
+                    });
+            		add(bouton);
+        		}    			
+        		else //Si la valeur du tableau est différente de zéro, c'est qu'elle appartient à la grille de base. Création du bouton contenant cette valeur, et désactive le bouton
+        		{
+        			c = Integer.toString(r);
+        			JToggleButton bouton = new JToggleButton(c);
+        			bouton.setEnabled(false);
+            		add(bouton);
+        		}    			
+        	}
+        }
+        this.setVisible(true);
+      }
+    }    
+}
